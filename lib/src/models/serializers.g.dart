@@ -1,0 +1,35 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'serializers.dart';
+
+// **************************************************************************
+// BuiltValueGenerator
+// **************************************************************************
+
+Serializers _$serializers = (new Serializers().toBuilder()
+      ..add(Category.serializer)
+      ..add(Episode.serializer)
+      ..add(Featured.serializer)
+      ..add(FeaturedItem.serializer)
+      ..add(Post.serializer)
+      ..add(PostList.serializer)
+      ..add(PostListItem.serializer)
+      ..add(Season.serializer)
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(Episode)]),
+          () => new ListBuilder<Episode>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(FeaturedItem)]),
+          () => new ListBuilder<FeaturedItem>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(PostListItem)]),
+          () => new ListBuilder<PostListItem>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(PostListItem)]),
+          () => new ListBuilder<PostListItem>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(PostListItem)]),
+          () => new ListBuilder<PostListItem>()))
+    .build();
+
+// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
