@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:shashety_cinema_mobile/src/models/account.dart';
-import 'package:shashety_cinema_mobile/src/services/auth.dart';
-import 'package:shashety_cinema_mobile/src/widgets/activity_indicator.dart';
+import 'package:shashety_mobile/src/models/account.dart';
+import 'package:shashety_mobile/src/services/auth.dart';
+import 'package:shashety_mobile/src/widgets/activity_indicator.dart';
 
 import '../delegates/post_search.dart';
 import '../const.dart';
@@ -52,6 +52,7 @@ class Body extends StatelessWidget {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text(kAppName),
           leading: ScopedModelDescendant<AccountModel>(
             builder: (BuildContext context, Widget _, AccountModel account) {
@@ -64,7 +65,7 @@ class Body extends StatelessWidget {
                         });
                       },
                     )
-                  : Container();
+                  : SizedBox();
             },
           ),
           actions: <Widget>[
@@ -132,7 +133,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> getMovies() async {
     setState(() {
-      _hasError = false;
+      _hasError = null;
       _categories = null;
       _featured = null;
     });
@@ -141,6 +142,7 @@ class _HomePageState extends State<HomePage> {
       if (cats != null) {
         final Featured feat = await fetchFeatured();
         setState(() {
+          _hasError = false;
           _categories = cats;
           _featured = feat;
         });

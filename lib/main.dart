@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-import 'package:shashety_cinema_mobile/src/models/account.dart';
+import 'package:shashety_mobile/src/models/account.dart';
 
 import 'src/pages/app.dart';
 

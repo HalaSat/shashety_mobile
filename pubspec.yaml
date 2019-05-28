@@ -1,6 +1,6 @@
 name: shashety_mobile
 description: Movie streaming service.
-version: 2.6.3+25
+version: 3.0.0+29
 
 environment:
   sdk: '>=2.1.0 <3.0.0'

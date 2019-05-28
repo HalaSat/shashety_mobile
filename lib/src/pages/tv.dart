@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/services.dart';
 import 'package:screen/screen.dart';
-import 'package:shashety_cinema_mobile/src/widgets/activity_indicator.dart';
+import 'package:shashety_mobile/src/widgets/activity_indicator.dart';
 
 import '../widgets/channels_row.dart';
 import '../pages/player.dart';
