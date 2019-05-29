@@ -1,13 +1,12 @@
 package net.halasat.tv;
-
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ImageButton;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.mediarouter.app.MediaRouteButton;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -28,9 +27,14 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
+
+import com.google.android.gms.cast.framework.CastButtonFactory;
+import com.google.android.gms.cast.framework.CastContext;
+import com.google.android.gms.cast.framework.CastState;
+import com.google.android.gms.cast.framework.CastStateListener;
+
 
 public class PlayerActivity extends AppCompatActivity {
     private boolean isShowingTrackSelectionDialog;
@@ -41,6 +45,7 @@ public class PlayerActivity extends AppCompatActivity {
     private Uri videoUri;
     private Uri subtitleUri;
     private String title;
+    private MediaRouteButton mediaRouteButton;
 
     public void setVideoUri(String videoUri) {
         this.videoUri = Uri.parse(videoUri);
@@ -75,6 +80,26 @@ public class PlayerActivity extends AppCompatActivity {
 
         PlaybackControlView controlView = simpleExoPlayerView.findViewById(R.id.exo_controller);
         quality = controlView.findViewById(R.id.q);
+         //cast button
+        mediaRouteButton = controlView.findViewById(R.id.media_route_button);
+        CastButtonFactory.setUpMediaRouteButton(getApplicationContext(), mediaRouteButton);
+
+        mCastContext = CastContext.getSharedInstance(this);
+        //set visibility of casting button
+        if (mCastContext.getCastState() != CastState.NO_DEVICES_AVAILABLE)
+            mediaRouteButton.setVisibility(View.VISIBLE);
+
+        mCastContext.addCastStateListener(new CastStateListener() {
+            @Override
+            public void onCastStateChanged(int state) {
+                if (state == CastState.NO_DEVICES_AVAILABLE)
+                    mediaRouteButton.setVisibility(View.GONE);
+                else {
+                    if (mediaRouteButton.getVisibility() == View.GONE)
+                        mediaRouteButton.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
 
         DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter(); //test
@@ -143,4 +168,17 @@ public class PlayerActivity extends AppCompatActivity {
         if (player != null)
             player.setPlayWhenReady(false);
     }
+    /*
+     * menu to add casting button
+     * */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.media_route_menu_item, menu);
+        CastButtonFactory.setUpMediaRouteButton(getApplicationContext(),
+                menu,
+                R.id.media_route_menu_item);
+        return true;
+    }
+
 }
