@@ -36,6 +36,11 @@ import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.gms.cast.framework.CastState;
 
+import com.google.android.gms.cast.framework.CastButtonFactory;
+import com.google.android.gms.cast.framework.CastContext;
+import com.google.android.gms.cast.framework.CastState;
+import com.google.android.gms.cast.framework.CastStateListener;
+
 public class PlayerActivity extends AppCompatActivity {
     private boolean isShowingTrackSelectionDialog;
     private SimpleExoPlayer player;
@@ -44,13 +49,10 @@ public class PlayerActivity extends AppCompatActivity {
     private Uri videoUri;
     private Uri subtitleUri;
 
-
     private Toolbar mToolbar;
-
 
     private MediaRouteButton mediaRouteButton;
     private CastContext castContext;
-
 
     private MediaSource videoSource;
     private String mediaInfoTitle;
@@ -78,46 +80,32 @@ public class PlayerActivity extends AppCompatActivity {
         // Initialize SimpleExoPlayer
         initializePlayer();
 
-
         // Setup setUpMediaRouteButton for casting
         setUpCasting();
         // Setup media info for casting
         setUpMediaInfo();
 
-
     }
 
     private void initializePlayer() {
-        DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter(); //test
+        DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter(); // test
 
-        TrackSelection.Factory videoTrackSelectionFactory = new
-                AdaptiveTrackSelection.Factory(bandwidthMeter);
+        TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
 
         trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
         LoadControl loadControl = new DefaultLoadControl();
 
         // Set the subtitles
-        trackSelector.setParameters(
-                trackSelector
-                        .buildUponParameters()
-                        .setPreferredTextLanguage("ar")
-        );
+        trackSelector.setParameters(trackSelector.buildUponParameters().setPreferredTextLanguage("ar"));
 
-        //  Create the player
-        player = ExoPlayerFactory.
-                newSimpleInstance(this, trackSelector, loadControl);
-
+        // Create the player
+        player = ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
 
         // Produces DataSource instances through which media data is loaded.
-        DataSource.Factory dataSourceFactory = new
-                DefaultDataSourceFactory(this,
-                Util.getUserAgent(this,
-                        "exoplayer2example"), bandwidthMeter);
+        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this,
+                Util.getUserAgent(this, "exoplayer2example"), bandwidthMeter);
 
-
-        MediaSource videoSource = new
-                HlsMediaSource.Factory(dataSourceFactory).
-                createMediaSource(videoUri);
+        MediaSource videoSource = new HlsMediaSource.Factory(dataSourceFactory).createMediaSource(videoUri);
 
         // Prepare video with sub title
         player.prepare(videoSource);
@@ -135,9 +123,8 @@ public class PlayerActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        //If Exo is ready, passing false you will pause the player
+        // If Exo is ready, passing false you will pause the player
         player.setPlayWhenReady(false);
-
 
     }
 
@@ -145,9 +132,7 @@ public class PlayerActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.change_quality_menu, menu);
-        CastButtonFactory.setUpMediaRouteButton(getApplicationContext(),
-                menu,
-                R.id.media_route_menu_item);
+        CastButtonFactory.setUpMediaRouteButton(getApplicationContext(), menu, R.id.media_route_menu_item);
 
         return true;
     }
@@ -155,13 +140,10 @@ public class PlayerActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.change_quality) {
-            if (!isShowingTrackSelectionDialog
-                    && TrackSelectionDialog.willHaveContent(trackSelector)) {
+            if (!isShowingTrackSelectionDialog && TrackSelectionDialog.willHaveContent(trackSelector)) {
                 isShowingTrackSelectionDialog = true;
-                TrackSelectionDialog trackSelectionDialog =
-                        TrackSelectionDialog.createForTrackSelector(
-                                trackSelector,
-                                /* onDismissListener= */ dismissedDialog -> isShowingTrackSelectionDialog = false);
+                TrackSelectionDialog trackSelectionDialog = TrackSelectionDialog.createForTrackSelector(trackSelector,
+                        /* onDismissListener= */ dismissedDialog -> isShowingTrackSelectionDialog = false);
                 trackSelectionDialog.show(getSupportFragmentManager(), /* tag= */ null);
 
             }
@@ -170,7 +152,6 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     private void setUpCasting() {
-
 
         CastButtonFactory.setUpMediaRouteButton(getApplicationContext(), mediaRouteButton);
 
@@ -193,14 +174,10 @@ public class PlayerActivity extends AppCompatActivity {
 
         movieMetadata.putString(MediaMetadata.KEY_TITLE, getMediaInfoTitle());
 
-        MediaInfo mediaInfo = new MediaInfo.Builder(videoUri + "")
-                .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
-                .setContentType("video/m3u8")
-                .setMetadata(movieMetadata)
-                .build();
+        MediaInfo mediaInfo = new MediaInfo.Builder(videoUri + "").setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
+                .setContentType("video/m3u8").setMetadata(movieMetadata).build();
 
-
-        final MediaQueueItem[] mediaItems = {new MediaQueueItem.Builder(mediaInfo).build()};
+        final MediaQueueItem[] mediaItems = { new MediaQueueItem.Builder(mediaInfo).build() };
 
         CastPlayer castPlayer = new CastPlayer(castContext);
 
@@ -223,13 +200,10 @@ public class PlayerActivity extends AppCompatActivity {
         // doesn't resize when the system bars hide and show.
         View decorView = getWindow().getDecorView();
 
-        decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+                | View.SYSTEM_UI_FLAG_IMMERSIVE);
     }
 
     @Override
@@ -237,10 +211,10 @@ public class PlayerActivity extends AppCompatActivity {
 
         super.onConfigurationChanged(newConfig);
 
-
         // Checking the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            // First Hide other objects (listview or recyclerview), better hide them using Gone.
+            // First Hide other objects (listview or recyclerview), better hide them using
+            // Gone.
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) simpleExoPlayerView.getLayoutParams();
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -286,14 +260,23 @@ public class PlayerActivity extends AppCompatActivity {
     private class PlayerEventListener implements Player.EventListener {
         @Override
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-            if (playbackState == Player.STATE_IDLE || playbackState == Player.STATE_ENDED
-                    || !playWhenReady) {
+            if (playbackState == Player.STATE_IDLE || playbackState == Player.STATE_ENDED || !playWhenReady) {
                 simpleExoPlayerView.setKeepScreenOn(false);
             } else {
                 simpleExoPlayerView.setKeepScreenOn(true);
             }
         }
     }
+
+    /*
+     * menu to add casting button
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.media_route_menu_item, menu);
+        CastButtonFactory.setUpMediaRouteButton(getApplicationContext(), menu, R.id.media_route_menu_item);
+        return true;
+    }
+
 }
-
-
