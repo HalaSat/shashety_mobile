@@ -46,7 +46,6 @@ public class PlayerActivity extends AppCompatActivity {
         this.videoUri = Uri.parse(videoUri);
     }
 
-
     public void setSubtitleUri(String subtitleUri) {
         this.subtitleUri = Uri.parse(subtitleUri);
     }
@@ -64,7 +63,6 @@ public class PlayerActivity extends AppCompatActivity {
             setSubtitleUri(bundle.getString("subsUrl"));
             setVideoUri(bundle.getString("videoUrl"));
             title = bundle.getString("title");
-            Log.d("sdfhjsad", bundle.getString("subsUrl"));
         }
 
 
