@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">VideoPlayer</string>
+    <string name="app_name">Shashety</string>
     <string name="track_selection_title">Qualities</string>
+    <string name="change_quality">Change quality</string>
+    <string name="media_route_menu_title">Casting</string>
+    <string name="title_activity_main2">Shashety Player</string>
 </resources>

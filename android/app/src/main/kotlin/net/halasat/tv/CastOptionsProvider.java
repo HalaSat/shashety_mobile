@@ -1,9 +1,8 @@
-package halasat.first.task.com;
+package net.halasat.tv;
 
 import android.content.Context;
 
 import com.google.android.gms.cast.CastMediaControlIntent;
-
 import com.google.android.gms.cast.MediaMetadata;
 import com.google.android.gms.cast.framework.CastOptions;
 import com.google.android.gms.cast.framework.OptionsProvider;

@@ -32,7 +32,7 @@ class _PlayerPageState extends State<PlayerPage> {
     super.initState();
     _currentChannel = widget.data;
     _name = widget.data.name;
-    _category = widget.data.cat;
+    _category = widget.data.category;
     _url = widget.data.url;
     _imageUrl =
         '$kTvBaseUrl/images/${widget.data.cat}/${widget.data.id}.png.jpg';
@@ -136,17 +136,22 @@ class _PlayerPageState extends State<PlayerPage> {
     );
   }
 
-  void _onCardPressed(Channel data, BuildContext context) {
-    String name = data.name;
-    String category = data.category;
-    if (data.url != _controller.dataSource) {
+  void _onCardPressed(Channel channelData, BuildContext context) {
+    print('----------\n\n\nchannelData: ' +
+        channelData.toString() +
+        '-----------\n\n\n');
+    String name = channelData.name;
+    String category = channelData.category;
+    if (channelData.url != _controller.dataSource) {
       setState(() {
-        _currentChannel = data;
+        _currentChannel = channelData;
         _name = name;
+        print(category);
         _category = category;
-        _imageUrl = '$kTvBaseUrl/images/${data.cat}/${data.id}.png.jpg';
+        _imageUrl =
+            '$kTvBaseUrl/images/${channelData.cat}/${channelData.id}.png.jpg';
         _controller = VideoPlayerController.network(
-          data.url,
+          channelData.url,
         );
       });
       _scrollController.animateTo(0.0,

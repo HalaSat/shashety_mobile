@@ -1,6 +1,6 @@
 name: shashety_mobile
 description: Movie streaming service.
-version: 3.0.0+29
+version: 3.0.0+30
 
 environment:
   sdk: '>=2.1.0 <3.0.0'
@@ -16,9 +16,6 @@ dependencies:
   http: ^0.12.0
   incrementally_loading_listview: ^0.0.4+3
   carousel_slider: ^1.1.0
-  # flutter_appavailability: ^0.0.21
-  # android_intent: ^0.3.0+1
-  # url_launcher: ^5.0.2
 
   # tv
   video_player: ^0.7.2
@@ -45,9 +42,13 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/
+    # - assets/post-placeholder.png
+    - assets/placeholder.png
+    - assets/featured-placeholder.jpg
 
 flutter_icons:
   android: 'launcher_icon'
   ios: true
   image_path: 'assets/icon.png'
+  image_path_android: 'assets/android_icon.png'
+  image_path_ios: 'assets/ios_icon.png'

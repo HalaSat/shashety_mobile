@@ -5,7 +5,9 @@ import '../models/post_list.dart';
 
 class PostVerticalCard extends StatelessWidget {
   PostVerticalCard({Key key, @required this.post, @required this.onPressed})
-      : story = post.story.length > kVCardStoryLength ? post.story.substring(0, kVCardStoryLength) + '...' : post.story,
+      : story = post.story.length > kVCardStoryLength
+            ? post.story.substring(0, kVCardStoryLength) + '...'
+            : post.story,
         super(key: key);
 
   final PostListItem post;
@@ -29,7 +31,7 @@ class PostVerticalCard extends StatelessWidget {
                   height: 240.5,
                   fit: BoxFit.cover,
                   image: NetworkImage(post.poster),
-                  placeholder: AssetImage('assets/post-placeholder.png'),
+                  placeholder: AssetImage('assets/placeholder.png'),
                 ),
               ),
               Container(

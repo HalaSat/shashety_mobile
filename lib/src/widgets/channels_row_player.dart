@@ -11,11 +11,13 @@ class PlayerChannelsRow extends StatelessWidget {
   final Color iconColor;
   final onCardPressed;
 
-  // filter channels by category
-  static List<Channel> filterChannels(String cat, List<Channel> channels) {
-    List<Channel> items =
-        channels.where((Channel item) => item.cat == cat).toList();
-    return items.isNotEmpty ? items : channels;
+  // Filter channels by category
+  static List<Channel> filterChannels(
+      String channelCategory, List<Channel> allChannels) {
+    List<Channel> filtered = allChannels
+        .where((Channel item) => item.category == channelCategory)
+        .toList();
+    return filtered.isNotEmpty ? filtered : allChannels;
   }
 
   PlayerChannelsRow({

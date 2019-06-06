@@ -25,11 +25,18 @@ class MainActivity : FlutterActivity() {
 
 
                 val intent = Intent(this, PlayerActivity::class.java)
+                // Bundle the video information
                 val bundle = Bundle()
                 bundle.putString("videoUrl", videoUrl)
-                bundle.putString("subsUrl", subsUrl)
+
+                // Not needed anymore
+                // bundle.putString("subsUrl", subsUrl)
+                // TODO: use title
                 bundle.putString("title", title)
+
+                // Pass the bundle
                 intent.putExtras(bundle)
+                // Start the intent
                 startActivity(intent)
             }
         }

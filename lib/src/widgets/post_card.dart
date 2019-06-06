@@ -61,7 +61,7 @@ class PostCard extends StatelessWidget {
         height: 240.5,
         fit: BoxFit.cover,
         image: NetworkImage(postListItem.poster),
-        placeholder: AssetImage('assets/post-placeholder.png'),
+        placeholder: AssetImage('assets/placeholder.png'),
       ),
     );
   }
