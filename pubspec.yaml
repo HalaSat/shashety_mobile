@@ -1,6 +1,6 @@
 name: shashety_mobile
 description: Movie streaming service.
-version: 3.0.0+30
+version: 3.0.1+31
 
 environment:
   sdk: '>=2.1.0 <3.0.0'
@@ -16,8 +16,9 @@ dependencies:
   http: ^0.12.0
   incrementally_loading_listview: ^0.0.4+3
   carousel_slider: ^1.1.0
+  rate_my_app: ^0.2.0
 
-  # tv
+  # TV
   video_player: ^0.7.2
   screen: ^0.0.4
   after_layout: ^1.0.7
@@ -28,7 +29,7 @@ dependencies:
   image_picker: ^0.5.0
   uuid: ^1.0.3
   scoped_model: ^1.0.1
-  cached_network_image: ^0.5.1
+  cached_network_image: ^0.6.0-beta+1
 
 dev_dependencies:
   flutter_test:

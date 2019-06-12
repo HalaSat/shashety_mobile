@@ -3,6 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="8dp"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
@@ -46,7 +47,12 @@
         <ImageButton
             android:id="@id/exo_next"
             style="@style/ExoMediaButton.Next" />
-
+        <ImageView
+            style="@style/ExoMediaButton.FastForward"
+            android:id="@+id/exo_fullscreen_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_fullscreen_expend"/>
 
         <androidx.mediarouter.app.MediaRouteButton
             android:id="@+id/media_route_button"
@@ -55,6 +61,7 @@
             android:layout_weight="1"
             android:mediaRouteTypes="user"
             android:visibility="gone" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -79,6 +86,8 @@
             android:id="@id/exo_progress"
             android:layout_width="0dp"
             android:layout_weight="1"
+            app:played_color="#1733B6"
+
             android:layout_height="26dp" />
 
         <TextView

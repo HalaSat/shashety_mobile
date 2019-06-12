@@ -8,10 +8,12 @@ import 'src/pages/app.dart';
 void main() {
   final AccountModel account = AccountModel();
 
-  runApp(ScopedModel<AccountModel>(
-    model: account,
-    child: App(),
-  ));
+  runApp(
+    ScopedModel<AccountModel>(
+      model: account,
+      child: App(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
