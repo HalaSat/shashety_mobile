@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ import com.google.android.exoplayer2.text.CaptionStyleCompat;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.ui.DefaultTimeBar;
 import com.google.android.exoplayer2.ui.PlaybackControlView;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.ui.SubtitleView;
@@ -63,9 +65,10 @@ public class PlayerActivity extends AppCompatActivity {
     private ImageView orientation, bottomSheet;
     private LinearLayout bottomSheetLayout;
     private BottomSheetBehavior bottomSheetBehavior;
-    private TextView changeQuailty, changeFontSize, textSize;
+    private TextView changeQuailty, changeFontSize, textSize,exo_duration,exo_position,text_title;
     private OrientationEventListener orientationEventListener;
-
+    private ImageButton forewordButton, backwardButton;
+    private DefaultTimeBar timeBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,12 +84,13 @@ public class PlayerActivity extends AppCompatActivity {
         setMediaInfoTitle(getIntent().getStringExtra("title"));
         // Set videoUrl
         setVideoUri(getIntent().getStringExtra("videoUrl"));
+        text_title.setText(getIntent().getStringExtra("title"));
         // Initialize SimpleExoPlayer
         initializePlayer();
         // Setup setUpMediaRouteButton for casting
-        setUpCasting();
+        //setUpCasting();
         // Setup media info for casting
-        setUpMediaInfo();
+        //setUpMediaInfo();
         //initial full screen mode
         initFullscreenDialog();
         initFullscreenButton();
@@ -190,6 +194,10 @@ public class PlayerActivity extends AppCompatActivity {
 
             }
         });
+        boolean showTV=getIntent().getBooleanExtra("useTvPlayer",false);
+        if(showTV){
+            hideController();
+        }
     }
 
     private void setOrientationSensor() {
@@ -453,7 +461,8 @@ public class PlayerActivity extends AppCompatActivity {
     private void findView() {
         mToolbar = findViewById(R.id.app_bar);
         simpleExoPlayerView = findViewById(R.id.exoplayer);
-        mediaRouteButton = findViewById(R.id.media_route_button);
+        text_title=mToolbar.findViewById(R.id.text_title);
+
         PlaybackControlView controlView = simpleExoPlayerView.findViewById(R.id.exo_controller);
         mFullScreenIcon = controlView.findViewById(R.id.exo_fullscreen_icon);
         orientation = mToolbar.findViewById(R.id.orientation);
@@ -462,6 +471,13 @@ public class PlayerActivity extends AppCompatActivity {
         changeFontSize = findViewById(R.id.change_font_size);
         changeQuailty = findViewById(R.id.change_quality);
         textSize = findViewById(R.id.text_size);
+        forewordButton=controlView.findViewById(R.id.exo_ffwd);
+        backwardButton=controlView.findViewById(R.id.exo_rew);
+        timeBar=controlView.findViewById(R.id.exo_progress);
+        exo_duration=controlView.findViewById(R.id.exo_duration);
+        exo_position=controlView.findViewById(R.id.exo_position);
+        mediaRouteButton =  mToolbar.findViewById(R.id.media_route_button);
+        //titleText=mToolbar.findViewById(R.id.title_text);
 
     }
 
@@ -550,5 +566,22 @@ public class PlayerActivity extends AppCompatActivity {
 
 
         }
+    }
+    // Hide controller button for TV use
+    public void hideController(){
+        forewordButton.setImageDrawable(null);
+        backwardButton.setImageDrawable(null);
+        backwardButton.setEnabled(false);
+        forewordButton.setEnabled(false);
+        exo_position.setVisibility(View.GONE);
+        exo_duration.setVisibility(View.GONE);
+        timeBar.setEnabled(false);
+        timeBar.setAdMarkerColor(Color.BLACK);
+        timeBar.setBufferedColor(Color.BLACK);
+        timeBar.setPlayedColor(Color.BLACK);
+        timeBar.setPlayedAdMarkerColor(Color.BLACK);
+        timeBar.setScrubberColor(Color.BLACK);
+        timeBar.setUnplayedColor(Color.BLACK);
+
     }
 }

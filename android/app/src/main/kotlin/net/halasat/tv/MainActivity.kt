@@ -22,12 +22,14 @@ class MainActivity : FlutterActivity() {
                 val videoUrl = args["movieUrl"] as String
                 val subsUrl = args["subtitlesUrl"] as String
                 val title = args["title"] as String
+                val useTvPlayer = false
 
 
                 val intent = Intent(this, PlayerActivity::class.java)
                 // Bundle the video information
                 val bundle = Bundle()
                 bundle.putString("videoUrl", videoUrl)
+                bundle.putBoolean("useTvPlayer",useTvPlayer)
 
                 // Not needed anymore
                 // bundle.putString("subsUrl", subsUrl)
