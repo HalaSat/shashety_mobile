@@ -37,6 +37,13 @@ class _PostRowState extends State<PostRow> with AutomaticKeepAliveClientMixin {
 
   @override
   void initState() {
+    // PostList rowData = PageStorage.of(context)
+    // .readState(context, identifier: 'row-${widget.category}');
+    // if (rowData != null) {
+    // print('there is data !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+    // _dataList = rowData.posts.toList();
+    // _pages = rowData.pages;
+    // } else {
     widget.fetchList(widget.category, 1).then(
           (PostList data) => setState(
                 () {
@@ -45,6 +52,9 @@ class _PostRowState extends State<PostRow> with AutomaticKeepAliveClientMixin {
                 },
               ),
         );
+    // PageStorage.of(context)
+    // .writeState(context, _dataList, identifier: 'row-${widget.category}');
+    // }
 
     super.initState();
   }
@@ -64,9 +74,9 @@ class _PostRowState extends State<PostRow> with AutomaticKeepAliveClientMixin {
       child: _dataList != null
           ? _buildList(context, _dataList)
           : Container(
-            height: 330.0,
-            child: ActivityIndicator(),
-          ),
+              height: 330.0,
+              child: ActivityIndicator(),
+            ),
     );
   }
 
@@ -92,9 +102,10 @@ class _PostRowState extends State<PostRow> with AutomaticKeepAliveClientMixin {
               onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) {
                       return CategoryPage(
-                          category: widget.category,
-                          title: widget.title,
-                          titleBorderColor: widget.titleBorderColor);
+                        category: widget.category,
+                        title: widget.title,
+                        titleBorderColor: widget.titleBorderColor,
+                      );
                     }),
                   )),
         ),
@@ -133,7 +144,6 @@ class _PostRowState extends State<PostRow> with AutomaticKeepAliveClientMixin {
   Future<bool> _loadMore() async {
     if (_nextPage <= _pages) {
       final PostList data = await widget.fetchList(widget.category, _nextPage);
-
       setState(() {
         _dataList.addAll(data.posts);
       });

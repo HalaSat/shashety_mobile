@@ -36,15 +36,36 @@ class App extends StatelessWidget {
   ThemeData _buildTheme() {
     return ThemeData.dark().copyWith(
       primaryColor: Colors.black,
-      accentColor: Colors.blue,
+      accentColor: Colors.red,
+      scaffoldBackgroundColor: Colors.black,
     );
   }
 }
 
-class Body extends StatelessWidget {
+class Body extends StatefulWidget {
   Body({Key key}) : super(key: key);
 
+  @override
+  _BodyState createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
   final Auth _auth = Auth();
+  final PageStorageBucket bucket = PageStorageBucket();
+  final List<Color> _colors = [Colors.red, Colors.blue, Colors.purple];
+  // Color _appBarColor;
+  List<Widget> _tabs = [];
+  int _currentTab = 0;
+
+  @override
+  void initState() {
+    _tabs.add(PageStorage(bucket: bucket, child: HomePage()));
+    _tabs.add(_createPageStorage(TvPage()));
+    _tabs.add(_createPageStorage(LoginPage()));
+
+    // _appBarColor = _colors[0];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +73,7 @@ class Body extends StatelessWidget {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
+          // backgroundColor: _appBarColor,
           centerTitle: true,
           title: Text(kAppName),
           leading: ScopedModelDescendant<AccountModel>(
@@ -77,25 +99,36 @@ class Body extends StatelessWidget {
                   ),
             )
           ],
-          bottom: TabBar(
-            indicatorColor: Theme.of(context).accentColor,
-            tabs: <Widget>[
-              Tab(icon: Icon(Icons.movie)),
-              Tab(icon: Icon(Icons.tv)),
-              Tab(icon: Icon(Icons.message))
-            ],
-          ),
         ),
-        body: TabBarView(
-          children: <Widget>[
-            HomePage(),
-            TvPage(),
-            LoginPage(),
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.shifting,
+          currentIndex: _currentTab,
+          onTap: (index) => setState(() {
+                _currentTab = index;
+                // _appBarColor = _colors[index];
+              }),
+          items: [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.movie),
+                title: Text('Cinema'),
+                backgroundColor: _colors[0]),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.tv),
+                title: Text('TV'),
+                backgroundColor: _colors[1]),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.message),
+                title: Text('Chat'),
+                backgroundColor: _colors[2])
           ],
         ),
+        body: _tabs[_currentTab],
       ),
     );
   }
+
+  Widget _createPageStorage(Widget widget) =>
+      PageStorage(bucket: bucket, child: widget);
 }
 
 class HomePage extends StatefulWidget {
@@ -113,7 +146,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    getMovies();
+
+    _getMovies();
   }
 
   @override
@@ -127,28 +161,52 @@ class _HomePageState extends State<HomePage> {
                 ])
               : _buildNetworkError(context)
           : ActivityIndicator(),
-      onRefresh: getMovies,
+      onRefresh: _refreshMovies,
     );
   }
 
-  Future<void> getMovies() async {
+  Future<void> _refreshMovies() async {
     setState(() {
       _hasError = null;
       _categories = null;
       _featured = null;
     });
-    try {
-      final List<Category> cats = await fetchCategories();
-      if (cats != null) {
-        final Featured feat = await fetchFeatured();
-        setState(() {
-          _hasError = false;
-          _categories = cats;
-          _featured = feat;
-        });
+    _getMovies();
+  }
+
+  Future<void> _getMovies() async {
+    List<Category> categories =
+        PageStorage.of(context).readState(context, identifier: 'categories');
+    Featured featured =
+        PageStorage.of(context).readState(context, identifier: 'featured');
+    print(
+        '-----------------------------------------------------------------------------\n ${categories != null && featured != null}\n---------------------------------------------------------------------------------------------------------');
+    if (categories != null) {
+      print(
+          '---------------------------------------------------------------------------\nfeatured != null && categories != null\n---------------------------------------------------------------------------------------------------------');
+      setState(() {
+        _hasError = false;
+        _categories = categories;
+        _featured = featured;
+      });
+    } else {
+      try {
+        final List<Category> cats = await fetchCategories();
+        if (cats != null) {
+          final Featured feat = await fetchFeatured();
+          setState(() {
+            _hasError = false;
+            _categories = cats;
+            _featured = feat;
+          });
+          PageStorage.of(context)
+              .writeState(context, _categories, identifier: 'categories');
+          PageStorage.of(context)
+              .writeState(context, _featured, identifier: 'featured');
+        }
+      } catch (error) {
+        setState(() => _hasError = true);
       }
-    } catch (error) {
-      setState(() => _hasError = true);
     }
   }
 
@@ -251,7 +309,7 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           IconButton(
             icon: Icon(Icons.refresh),
-            onPressed: () => getMovies(),
+            onPressed: () => _getMovies(),
           ),
           Text('Connection error, please try again.'),
         ],
