@@ -9,6 +9,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/account.dart';
+import '../widgets/activity_indicator.dart';
 import '../const.dart' show kDefaultAvatarUrl;
 import '../services/auth.dart';
 import './chat.dart';
@@ -100,7 +101,7 @@ class _LoginFormState extends State<LoginForm> {
         radius: 50.0,
         backgroundColor: Colors.blue,
         backgroundImage: NetworkImage(_photoUrl),
-        child: _isLoadingImage ? CupertinoActivityIndicator() : Container(),
+        child: _isLoadingImage ? ActivityIndicator() : Container(),
       ),
       onTap: () {
         // Generate a unique id for the image, it may use the same uuid

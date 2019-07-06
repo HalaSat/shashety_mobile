@@ -49,7 +49,7 @@ class Body extends StatefulWidget {
   _BodyState createState() => _BodyState();
 }
 
-class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
+class _BodyState extends State<Body> {
   final Auth _auth = Auth();
   final PageStorageBucket bucket = PageStorageBucket();
   final List<Color> _colors = [Colors.red, Colors.blue, Colors.indigo];
@@ -71,7 +71,7 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(kAppName),
+        title: Text(kAppName.toUpperCase()),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
@@ -173,9 +173,6 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
 
   Widget _createPageStorage(Widget widget) =>
       PageStorage(bucket: bucket, child: widget);
-
-  @override
-  bool get wantKeepAlive => true;
 }
 
 class HomePage extends StatefulWidget {

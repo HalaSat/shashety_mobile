@@ -17,7 +17,7 @@ class ChatPage extends StatefulWidget {
   }
 }
 
-class _ChatPageState extends State<ChatPage> with AutomaticKeepAliveClientMixin {
+class _ChatPageState extends State<ChatPage> {
   final GlobalKey<FormState> _messageInputFormKey = GlobalKey<FormState>();
   final Firestore _firestore = Firestore.instance;
 
@@ -219,7 +219,4 @@ class _ChatPageState extends State<ChatPage> with AutomaticKeepAliveClientMixin 
       ),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
