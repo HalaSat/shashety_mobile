@@ -1,11 +1,8 @@
 import 'dart:async';
 
-// import 'package:android_intent/android_intent.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:flutter_appavailability/flutter_appavailability.dart';
-// import 'package:url_launcher/url_launcher.dart';
 import 'package:queries/collections.dart';
 
 import '../delegates/post_search.dart';
@@ -204,21 +201,13 @@ class _PostPageState extends State<PostPage> {
           ),
           seasons != null ? _buildSeasonList(context) : SizedBox(),
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                padding: const EdgeInsets.only(bottom: 5.0),
-                margin: const EdgeInsets.only(bottom: 8.0),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      width: 2.0,
-                      color: Colors.purple,
-                    ),
-                  ),
-                ),
+                padding: const EdgeInsets.all(5.0),
                 child: Text(
                   'Recommended',
-                  style: Theme.of(context).textTheme.body1,
+                  style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
                 ),
               ),
               _buildRecommendedRow(context, item),
@@ -303,7 +292,7 @@ class _PostPageState extends State<PostPage> {
 
   Widget _buildRecommendedRow(BuildContext context, Post item) {
     return Container(
-      height: 310.0,
+      height: 512 / 2.5,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: item.other.length,
@@ -354,40 +343,6 @@ class _PostPageState extends State<PostPage> {
     );
   }
 
-  // Future<void> _checkMoviePlayerIsAvailable(BuildContext context) async {
-  //   try {
-  //     await AppAvailability.checkAvailability(kMXPlayer);
-  //   } catch (e) {
-  //     showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) => AlertDialog(
-  //             title: Text('MX Player is required!'),
-  //             content: Text('Do you want to install MX Player?'),
-  //             actions: <Widget>[
-  //               FlatButton(
-  //                 child: Text('CANCEL'),
-  //                 textColor: Theme.of(context).textTheme.body1.color,
-  //                 onPressed: () {
-  //                   Navigator.of(context).pop();
-  //                 },
-  //               ),
-  //               RaisedButton(
-  //                 child: Text('INSTALL'),
-  //                 textColor: Theme.of(context).textTheme.body1.color,
-  //                 onPressed: () {
-  //                   AndroidIntent intent = AndroidIntent(
-  //                     action: 'action_view',
-  //                     data: Uri.encodeFull('market://details?id=' + kMXPlayer),
-  //                   );
-  //                   intent.launch();
-  //                 },
-  //               )
-  //             ],
-  //           ),
-  //     );
-  //   }
-  // }
-
   void _launchMoviePlayer(String title, String movieUrl, String subtitlesUrl) {
     platform.invokeMethod("launchMoviePlayer", {
       "movieUrl": movieUrl,
@@ -395,14 +350,6 @@ class _PostPageState extends State<PostPage> {
       "title": title,
     });
   }
-
-  // Future<void> _launchUrl(String url) async {
-  //   if (await canLaunch(url)) {
-  //     await launch(url);
-  //   } else {
-  //     throw 'Could not launch $url';
-  //   }
-  // }
 }
 
 class InfoRow extends StatelessWidget {

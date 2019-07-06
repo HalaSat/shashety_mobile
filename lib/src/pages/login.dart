@@ -117,6 +117,7 @@ class _LoginFormState extends State<LoginForm> {
       },
     );
     Widget _submitButton = RaisedButton(
+      color: Colors.indigo,
       child: !_isLoading
           ? Text(_hasAccount ? 'Sign in' : 'Sign up')
           : const CupertinoActivityIndicator(),
@@ -125,7 +126,7 @@ class _LoginFormState extends State<LoginForm> {
 
     return ScopedModelDescendant<AccountModel>(
       builder: (BuildContext context, Widget _, AccountModel account) {
-        if (account.status == AccountStatus.signedOut)
+        if (account.status == AccountStatus.signedOut) {
           return Form(
             // autovalidate: true,
             key: _formKey,
@@ -150,8 +151,11 @@ class _LoginFormState extends State<LoginForm> {
               ],
             ),
           );
-        else
+        } else {
+          ScopedModel.of<AccountModel>(context).user = _user;
+
           return ChatPage(user: _user);
+        }
       },
     );
   }
@@ -166,8 +170,10 @@ class _LoginFormState extends State<LoginForm> {
       if (hasAccount) {
         try {
           user = await auth.signIn(email: _email, password: _password);
+          final accountModel = ScopedModel.of<AccountModel>(context);
+          accountModel.status = AccountStatus.signedIn;
+          accountModel.user = user;
 
-          ScopedModel.of<AccountModel>(context).status = AccountStatus.signedIn;
           // Debug
           print('Signed in as $user');
         } catch (error) {
@@ -187,7 +193,10 @@ class _LoginFormState extends State<LoginForm> {
             password: _password,
             photoUrl: _photoUrl,
           );
-          ScopedModel.of<AccountModel>(context).status = AccountStatus.signedIn;
+
+          final accountModel = ScopedModel.of<AccountModel>(context);
+          accountModel.status = AccountStatus.signedIn;
+          accountModel.user = user;
 
           // Debug
           print('Signed up as ${user.displayName}');

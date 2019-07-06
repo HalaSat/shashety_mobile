@@ -11,7 +11,7 @@ Future<List<Channel>> getRawChannelsData(String url) async {
   await http.get(url).then((res) {
     List temp = json.decode((res.body));
     channels = _buildChannelsList(jsonData: temp);
-  });
+  }).timeout(Duration(seconds: 15));
   return channels;
 }
 

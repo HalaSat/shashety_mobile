@@ -194,7 +194,7 @@ public class PlayerActivity extends AppCompatActivity {
 
             }
         });
-        boolean showTV=getIntent().getBooleanExtra("useTvPlayer",false);
+        boolean showTV = getIntent().getBooleanExtra("useTvPlayer",false);
         if(showTV){
             hideController();
         }

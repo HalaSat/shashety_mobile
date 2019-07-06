@@ -11,10 +11,18 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(Episode.serializer)
       ..add(Featured.serializer)
       ..add(FeaturedItem.serializer)
+      ..add(HomePageMovies.serializer)
       ..add(Post.serializer)
       ..add(PostList.serializer)
       ..add(PostListItem.serializer)
       ..add(Season.serializer)
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(Category)]),
+          () => new ListBuilder<Category>())
+      ..addBuilderFactory(
+          const FullType(BuiltMap,
+              const [const FullType(String), const FullType(PostList)]),
+          () => new MapBuilder<String, PostList>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Episode)]),
           () => new ListBuilder<Episode>())

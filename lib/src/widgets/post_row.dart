@@ -2,25 +2,22 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import '../pages/category.dart';
-import 'package:incrementally_loading_listview/incrementally_loading_listview.dart';
 
-import '../widgets/activity_indicator.dart';
 import '../models/post_list.dart';
 import '../pages/post_page.dart';
-import '../services/post_list.dart';
 import '../widgets/post_card.dart';
 
 typedef Future<PostList> FetchList(int category, int page);
 
 class PostRow extends StatefulWidget {
   const PostRow({
-    this.fetchList = fetchPostList,
+    this.data,
     this.category = 1,
     this.title = 'Recommended',
     this.titleBorderColor = Colors.red,
   });
 
-  final FetchList fetchList;
+  final PostList data;
   final int category;
   final String title;
   final Color titleBorderColor;
@@ -30,32 +27,8 @@ class PostRow extends StatefulWidget {
 }
 
 class _PostRowState extends State<PostRow> with AutomaticKeepAliveClientMixin {
-  List<PostListItem> _dataList;
-
-  int _pages;
-  int _nextPage = 2;
-
   @override
   void initState() {
-    // PostList rowData = PageStorage.of(context)
-    // .readState(context, identifier: 'row-${widget.category}');
-    // if (rowData != null) {
-    // print('there is data !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-    // _dataList = rowData.posts.toList();
-    // _pages = rowData.pages;
-    // } else {
-    widget.fetchList(widget.category, 1).then(
-          (PostList data) => setState(
-                () {
-                  _dataList = data.posts.toList();
-                  _pages = data.pages;
-                },
-              ),
-        );
-    // PageStorage.of(context)
-    // .writeState(context, _dataList, identifier: 'row-${widget.category}');
-    // }
-
     super.initState();
   }
 
@@ -71,50 +44,40 @@ class _PostRowState extends State<PostRow> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 10.0),
-      child: _dataList != null
-          ? _buildList(context, _dataList)
-          : Container(
-              height: 330.0,
-              child: ActivityIndicator(),
-            ),
+      child: _buildList(
+        context,
+        widget.data.posts.toList(),
+      ),
     );
   }
 
   Widget _buildList(BuildContext context, List<PostListItem> list) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Container(
-          padding: EdgeInsets.only(bottom: 5.0),
-          margin: EdgeInsets.only(bottom: 8.0),
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                width: 2.0,
-                color: widget.titleBorderColor,
-              ),
+        GestureDetector(
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.only(left: 5.0),
+            child: Text(
+              widget.title,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
             ),
           ),
-          child: GestureDetector(
-              child: Text(
-                widget.title.toUpperCase(),
-                style: Theme.of(context).textTheme.body1,
+          onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) {
+                  return CategoryPage(
+                    category: widget.category,
+                    title: widget.title,
+                    titleBorderColor: widget.titleBorderColor,
+                  );
+                }),
               ),
-              onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) {
-                      return CategoryPage(
-                        category: widget.category,
-                        title: widget.title,
-                        titleBorderColor: widget.titleBorderColor,
-                      );
-                    }),
-                  )),
         ),
         Container(
-          height: 310.0,
-          child: IncrementallyLoadingListView(
-            loadMore: _loadMore,
-            hasMore: () => (_nextPage <= _pages),
-            itemCount: () => list.length,
+          height: 512 / 2.5,
+          child: ListView.builder(
+            itemCount: list.length,
             scrollDirection: Axis.horizontal,
             itemBuilder: (BuildContext context, int index) =>
                 _buildListItem(context, list, index),
@@ -139,19 +102,5 @@ class _PostRowState extends State<PostRow> with AutomaticKeepAliveClientMixin {
         );
       },
     );
-  }
-
-  Future<bool> _loadMore() async {
-    if (_nextPage <= _pages) {
-      final PostList data = await widget.fetchList(widget.category, _nextPage);
-      setState(() {
-        _dataList.addAll(data.posts);
-      });
-
-      _nextPage++;
-
-      return true;
-    }
-    return false;
   }
 }

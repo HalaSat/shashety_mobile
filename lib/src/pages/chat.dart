@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart' show CupertinoActivityIndicator;
-import 'package:firebase_auth/firebase_auth.dart' show FirebaseUser;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' show FirebaseUser;
+import 'package:flutter/cupertino.dart' show CupertinoActivityIndicator;
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import '../widgets/activity_indicator.dart';
 
 class ChatPage extends StatefulWidget {
   final FirebaseUser user;
@@ -15,7 +17,7 @@ class ChatPage extends StatefulWidget {
   }
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _ChatPageState extends State<ChatPage> with AutomaticKeepAliveClientMixin {
   final GlobalKey<FormState> _messageInputFormKey = GlobalKey<FormState>();
   final Firestore _firestore = Firestore.instance;
 
@@ -108,11 +110,13 @@ class _ChatPageState extends State<ChatPage> {
                 borderRadius: BorderRadius.circular(25.0),
                 child: CachedNetworkImage(
                   imageUrl: message['from']['photo'],
-                  placeholder: Container(
-                      width: 50.0,
-                      height: 50.0,
-                      child: const CupertinoActivityIndicator()),
-                  errorWidget: Container(child: const Icon(Icons.error)),
+                  placeholder: (context, _) => Container(
+                        width: 50.0,
+                        height: 50.0,
+                        child: const ActivityIndicator(),
+                      ),
+                  errorWidget: (context, _str, _obj) =>
+                      Container(child: const Icon(Icons.error)),
                   fit: BoxFit.cover,
                   width: 50.0,
                   height: 50.0,
@@ -215,4 +219,7 @@ class _ChatPageState extends State<ChatPage> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
