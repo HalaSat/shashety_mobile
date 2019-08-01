@@ -44,11 +44,7 @@ class _TvPageState extends State<TvPage> {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-        onRefresh: () async {
-          await _getChannels();
-        },
-        child: _buildChannels(context));
+    return _buildChannels(context);
   }
 
   Widget _buildChannels(BuildContext context) {
@@ -99,7 +95,7 @@ class _TvPageState extends State<TvPage> {
         ],
       );
     } else if (_channelsLoaded == false) {
-      return buildNetworkError(context, _getChannels);
+      return buildNetworkError(context, _initChannels);
     } else {
       return Center(
         child: ActivityIndicator(),
@@ -107,25 +103,25 @@ class _TvPageState extends State<TvPage> {
     }
   }
 
-  Future<void> _getChannels() async {
-    setState(() {
-      _channels = null;
-      _channelsLoaded = null;
-    });
-    try {
-      final channels = await getRawChannelsData(kChannelsUrl);
-      setState(() {
-        _channels = channels;
-        _channelsLoaded = true;
-      });
-      PageStorage.of(context)
-          .writeState(context, _channels, identifier: 'channels');
-    } catch (error) {
-      setState(() {
-        _channelsLoaded = false;
-      });
-    }
-  }
+  // Future<void> _getChannels() async {
+  //   setState(() {
+  //     _channels = null;
+  //     _channelsLoaded = null;
+  //   });
+  //   try {
+  //     final channels = await getRawChannelsData(kChannelsUrl);
+  //     setState(() {
+  //       _channels = channels;
+  //       _channelsLoaded = true;
+  //     });
+  //     PageStorage.of(context)
+  //         .writeState(context, _channels, identifier: 'channels');
+  //   } catch (error) {
+  //     setState(() {
+  //       _channelsLoaded = false;
+  //     });
+  //   }
+  // }
 
   Future<void> _initChannels() async {
     final pageStorageBucket = PageStorage.of(context);

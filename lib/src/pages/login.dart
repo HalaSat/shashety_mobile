@@ -16,21 +16,18 @@ import './chat.dart';
 
 class LoginPage extends StatefulWidget {
   static String tag = 'chat-screen';
+
   @override
   _LoginPageState createState() {
     return _LoginPageState();
   }
 }
 
-class _LoginPageState extends State<LoginPage>
-    with AutomaticKeepAliveClientMixin {
+class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return LoginForm();
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
 
 class LoginForm extends StatefulWidget {
@@ -60,6 +57,8 @@ class _LoginFormState extends State<LoginForm> {
       if (user != null) {
         _user = user;
         ScopedModel.of<AccountModel>(context).status = AccountStatus.signedIn;
+        ScopedModel.of<AccountModel>(context).user = _user;
+
       } else {
         ScopedModel.of<AccountModel>(context).status = AccountStatus.signedOut;
       }
@@ -107,21 +106,22 @@ class _LoginFormState extends State<LoginForm> {
         // Generate a unique id for the image, it may use the same uuid
         // of the user in the future
         // TODO: Use user uuid instead
-
         String imageName = Uuid().v1();
+
         setState(() => _isLoadingImage = true);
-        _pickAndUploadImage('users_profile_images/$imageName.png')
-            .then((url) => setState(() {
-                  _photoUrl = url;
-                  _isLoadingImage = false;
-                }));
+        _pickAndUploadImage('users_profile_images/$imageName.png').then(
+          (url) => setState(() {
+                _photoUrl = url;
+                _isLoadingImage = false;
+              }),
+        );
       },
     );
     Widget _submitButton = RaisedButton(
       color: Colors.indigo,
       child: !_isLoading
           ? Text(_hasAccount ? 'Sign in' : 'Sign up')
-          : const CupertinoActivityIndicator(),
+          : const ActivityIndicator(type: ActivityIndicatorType.Linear),
       onPressed: _isLoading ? null : () => _submit(context, _hasAccount),
     );
 
@@ -129,7 +129,6 @@ class _LoginFormState extends State<LoginForm> {
       builder: (BuildContext context, Widget _, AccountModel account) {
         if (account.status == AccountStatus.signedOut) {
           return Form(
-            // autovalidate: true,
             key: _formKey,
             child: ListView(
               padding: const EdgeInsets.all(10.0),
@@ -153,8 +152,6 @@ class _LoginFormState extends State<LoginForm> {
             ),
           );
         } else {
-          ScopedModel.of<AccountModel>(context).user = _user;
-
           return ChatPage(user: _user);
         }
       },
