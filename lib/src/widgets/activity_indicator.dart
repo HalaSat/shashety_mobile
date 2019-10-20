@@ -1,10 +1,12 @@
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 enum ActivityIndicatorType { Circular, Linear }
 
 class ActivityIndicator extends StatelessWidget {
-  const ActivityIndicator({ this.type = ActivityIndicatorType.Circular, this.color = Colors.red });
+  const ActivityIndicator(
+      {this.type = ActivityIndicatorType.Circular, this.color = Colors.red});
 
   final ActivityIndicatorType type;
   final Color color;
@@ -12,11 +14,15 @@ class ActivityIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Theme.of(context).platform == TargetPlatform.iOS
-          ? CupertinoActivityIndicator()
-          : type == ActivityIndicatorType.Circular
-              ? CircularProgressIndicator()
-              : LinearProgressIndicator(),
+      child: Container(
+        width: 200,
+        height: 200,
+        child: FlareActor(
+          'assets/flare/orb.flr',
+          animation: 'Aura',
+          alignment: Alignment.center,
+        ),
+      ),
     );
   }
 }

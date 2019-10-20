@@ -28,6 +28,7 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ext.cast.CastPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.text.CaptionStyleCompat;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
@@ -254,9 +255,17 @@ public class PlayerActivity extends AppCompatActivity {
                         "exoplayer2example"), bandwidthMeter);
 
 
-        MediaSource videoSource = new
-                HlsMediaSource.Factory(dataSourceFactory).
-                createMediaSource(videoUri);
+        MediaSource videoSource;
+
+
+        if (getIntent().getBooleanExtra("useTvPlayer",false)) {
+            videoSource = new HlsMediaSource.Factory(dataSourceFactory).createMediaSource(videoUri);
+        } else {
+            videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory).
+                    createMediaSource(videoUri);
+        }
+
+
 
         // Prepare video with sub title
         player.prepare(videoSource);

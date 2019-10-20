@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseUser;
-import 'package:flutter/cupertino.dart' show CupertinoActivityIndicator;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -48,8 +47,7 @@ class _ChatPageState extends State<ChatPage> {
     return StreamBuilder(
       stream: _stream,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (!snapshot.hasData)
-          return Expanded(child: CupertinoActivityIndicator());
+        if (!snapshot.hasData) return Expanded(child: ActivityIndicator());
         return Flexible(
           child: GestureDetector(
             child: ListView.builder(
@@ -111,10 +109,10 @@ class _ChatPageState extends State<ChatPage> {
                 child: CachedNetworkImage(
                   imageUrl: message['from']['photo'],
                   placeholder: (context, _) => Container(
-                        width: 50.0,
-                        height: 50.0,
-                        child: const ActivityIndicator(),
-                      ),
+                    width: 50.0,
+                    height: 50.0,
+                    child: const ActivityIndicator(),
+                  ),
                   errorWidget: (context, _str, _obj) =>
                       Container(child: const Icon(Icons.error)),
                   fit: BoxFit.cover,

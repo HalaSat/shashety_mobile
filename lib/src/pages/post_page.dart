@@ -42,8 +42,8 @@ class _PostPageState extends State<PostPage> {
       int id = int.parse(item.id);
       fetchSeries(id).then(
         (data) => setState(() {
-              seasons = data;
-            }),
+          seasons = data;
+        }),
       );
     }
 
@@ -101,12 +101,12 @@ class _PostPageState extends State<PostPage> {
       actions: <Widget>[
         Builder(
           builder: (context) => IconButton(
-                icon: Icon(Icons.search),
-                onPressed: () => showSearch(
-                      context: context,
-                      delegate: PostSearchDelegate(),
-                    ),
-              ),
+            icon: Icon(Icons.search),
+            onPressed: () => showSearch(
+              context: context,
+              delegate: PostSearchDelegate(),
+            ),
+          ),
         ),
       ],
     );
@@ -137,10 +137,8 @@ class _PostPageState extends State<PostPage> {
         ? Center(
             child: GestureDetector(
               onTap: () {
-                final String movieUrl = movie.url.isEmpty
-                    ? movie.url360.isEmpty ? movie.url720 : movie.url360
-                    : movie.url;
-                _launchMoviePlayer(movie.title, movieUrl, movie.srt);
+                print(movie.url);
+                _launchMoviePlayer(movie.title, movie.url, movie.srt);
                 // _launchUrl('https://youtu.be/${movie.trailer}');
               },
               child: Container(

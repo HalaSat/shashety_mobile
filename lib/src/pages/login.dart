@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseUser;
-import 'package:flutter/cupertino.dart' show CupertinoActivityIndicator;
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -58,7 +57,6 @@ class _LoginFormState extends State<LoginForm> {
         _user = user;
         ScopedModel.of<AccountModel>(context).status = AccountStatus.signedIn;
         ScopedModel.of<AccountModel>(context).user = _user;
-
       } else {
         ScopedModel.of<AccountModel>(context).status = AccountStatus.signedOut;
       }
@@ -111,9 +109,9 @@ class _LoginFormState extends State<LoginForm> {
         setState(() => _isLoadingImage = true);
         _pickAndUploadImage('users_profile_images/$imageName.png').then(
           (url) => setState(() {
-                _photoUrl = url;
-                _isLoadingImage = false;
-              }),
+            _photoUrl = url;
+            _isLoadingImage = false;
+          }),
         );
       },
     );
@@ -121,7 +119,7 @@ class _LoginFormState extends State<LoginForm> {
       color: Colors.indigo,
       child: !_isLoading
           ? Text(_hasAccount ? 'Sign in' : 'Sign up')
-          : const ActivityIndicator(type: ActivityIndicatorType.Linear),
+          : const LinearProgressIndicator(),
       onPressed: _isLoading ? null : () => _submit(context, _hasAccount),
     );
 

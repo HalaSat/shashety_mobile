@@ -1,9 +1,9 @@
 name: shashety_mobile
 description: Movie streaming service.
-version: 3.1.0+32
+version: 3.1.2+34
 
 environment:
-  sdk: '>=2.1.0 <3.0.0'
+  sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -20,7 +20,7 @@ dependencies:
 
   # TV
   screen: ^0.0.4
-  open_iconic_flutter: '>=0.3.0 <0.4.0'
+  open_iconic_flutter: ">=0.3.0 <0.4.0"
   cloud_firestore: ^0.9.0
   firebase_storage: ^2.0.0
   firebase_auth: ^0.8.0
@@ -28,6 +28,7 @@ dependencies:
   uuid: ^2.0.0
   scoped_model: ^1.0.1
   cached_network_image: ^1.0.0
+  flare_flutter: ^1.6.2
 
 dev_dependencies:
   flutter_test:
@@ -44,10 +45,11 @@ flutter:
     # - assets/post-placeholder.png
     - assets/placeholder.png
     - assets/featured-placeholder.jpg
+    - assets/flare/orb.flr
 
 flutter_icons:
-  android: 'launcher_icon'
+  android: "launcher_icon"
   ios: true
-  image_path: 'assets/icon.png'
-  image_path_android: 'assets/android_icon.png'
-  image_path_ios: 'assets/ios_icon.png'
+  image_path: "assets/icon.png"
+  image_path_android: "assets/android_icon.png"
+  image_path_ios: "assets/ios_icon.png"

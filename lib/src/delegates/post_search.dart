@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shashety_mobile/src/widgets/activity_indicator.dart';
 
 import '../models/post_list.dart';
 import '../pages/post_page.dart';
@@ -59,7 +60,7 @@ class PostSearchDelegate extends SearchDelegate<String> {
             },
           );
         }
-        return LinearProgressIndicator(backgroundColor: Colors.purple);
+        return ActivityIndicator();
       },
     );
   }
@@ -89,7 +90,7 @@ class PostSearchDelegate extends SearchDelegate<String> {
             },
           );
         }
-        return LinearProgressIndicator(backgroundColor: Colors.purple);
+        return ActivityIndicator();
       },
     );
   }

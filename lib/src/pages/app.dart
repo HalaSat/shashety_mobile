@@ -78,19 +78,20 @@ class _BodyState extends State<Body> {
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () => showSearch(
-                  context: context,
-                  delegate: PostSearchDelegate(),
-                ),
+              context: context,
+              delegate: PostSearchDelegate(),
+            ),
           )
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.shifting,
+        backgroundColor: Colors.black,
+        selectedItemColor: Colors.purple[400],
         currentIndex: _currentTab,
         onTap: (index) => setState(() {
-              _currentTab = index;
-              // _appBarColor = _colors[index];
-            }),
+          _currentTab = index;
+          // _appBarColor = _colors[index];
+        }),
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.movie),
@@ -213,7 +214,11 @@ class _BodyState extends State<Body> {
         child: Column(
           children: cats
               .map((item) => ListTile(
-                    title: Text(item.title, style: Theme.of(context).textTheme.subtitle.copyWith(fontWeight: FontWeight.bold)),
+                    title: Text(item.title,
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle
+                            .copyWith(fontWeight: FontWeight.bold)),
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(builder: (context) {
@@ -238,14 +243,18 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   HomePageMovies _homePageMovies;
   bool _hasError;
+  AnimationController _animation;
 
   @override
   void initState() {
     super.initState();
 
+    _animation =
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
     _getMovies();
   }
 
@@ -253,13 +262,17 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return _hasError != null
         ? !_hasError
-            ? ListView(children: [
-                _buildCarouselSlider(context),
-                _buildCategories(context),
-              ])
+            ? FadeTransition(
+                opacity: _animation,
+                child: ListView(children: [
+                  _buildCarouselSlider(context),
+                  _buildCategories(context),
+                ]))
             : buildNetworkError(context, _getMovies)
         : ActivityIndicator();
   }
+
+  void _startAnimation() => _animation.forward();
 
   Future<void> _getMovies() async {
     setState(() {
@@ -273,6 +286,7 @@ class _HomePageState extends State<HomePage> {
         _hasError = false;
         _homePageMovies = homePageMovies;
       });
+      _startAnimation();
     } else {
       getHomePageMovies().then((data) {
         setState(() {
@@ -281,6 +295,7 @@ class _HomePageState extends State<HomePage> {
         });
         PageStorage.of(context)
             .writeState(context, _homePageMovies, identifier: 'homepagemovies');
+        _startAnimation();
       }).catchError((error) => setState(() {
             _hasError = true;
           }));
@@ -325,24 +340,24 @@ class _HomePageState extends State<HomePage> {
                 '$kVoduBase/${item.large}',
               ),
             ),
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: <Color>[
-                    Colors.red.withOpacity(0.5),
-                    Colors.blue.withOpacity(0.3),
-                  ],
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 10.0,
-              left: 10.0,
-              child: Text(
-                item.title,
-                style: TextStyle(fontSize: 15.0),
-              ),
-            )
+            // Container(
+            //   decoration: BoxDecoration(
+            //     gradient: LinearGradient(
+            //       colors: <Color>[
+            //         Colors.red.withOpacity(0.5),
+            //         Colors.blue.withOpacity(0.3),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+            // Positioned(
+            //   bottom: 10.0,
+            //   left: 10.0,
+            //   child: Text(
+            //     item.title,
+            //     style: TextStyle(fontSize: 15.0),
+            //   ),
+            // )
           ],
         ),
       ),
@@ -371,11 +386,11 @@ class _HomePageState extends State<HomePage> {
                 })
                 .map<Widget>(
                   (Category category) => PostRow(
-                        title: category.title,
-                        titleBorderColor: Theme.of(context).accentColor,
-                        data: _homePageMovies.movies[category.title],
-                        category: int.parse(category.id),
-                      ),
+                    title: category.title,
+                    titleBorderColor: Theme.of(context).accentColor,
+                    data: _homePageMovies.movies[category.title],
+                    category: int.parse(category.id),
+                  ),
                 )
                 .toList(),
           )
