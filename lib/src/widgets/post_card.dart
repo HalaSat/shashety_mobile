@@ -1,5 +1,6 @@
 // IMPORTS
 import 'package:flutter/material.dart';
+import '../const.dart';
 import '../models/post_list.dart';
 
 // CONSTANTS
@@ -33,10 +34,16 @@ class PostCard extends StatelessWidget {
   }
 
   Widget _buildPoster(BuildContext context) {
+    String poster;
+    if (postListItem.poster.startsWith('http')) {
+      poster = postListItem.poster;
+    } else {
+      poster = kVoduBase + '/' + postListItem.poster;
+    }
     return FadeInImage(
       height: 297.0,
       fit: BoxFit.cover,
-      image: NetworkImage(postListItem.poster),
+      image: NetworkImage(poster),
       placeholder: AssetImage('assets/placeholder.png'),
     );
   }

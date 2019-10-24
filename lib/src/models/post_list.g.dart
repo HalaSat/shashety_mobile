@@ -130,6 +130,12 @@ class _$PostListItemSerializer implements StructuredSerializer<PostListItem> {
         ..add(serializers.serialize(object.url,
             specifiedType: const FullType(String)));
     }
+    if (object.urladaptive != null) {
+      result
+        ..add('urladaptive')
+        ..add(serializers.serialize(object.urladaptive,
+            specifiedType: const FullType(String)));
+    }
     if (object.url360 != null) {
       result
         ..add('url360')
@@ -140,6 +146,12 @@ class _$PostListItemSerializer implements StructuredSerializer<PostListItem> {
       result
         ..add('url720')
         ..add(serializers.serialize(object.url720,
+            specifiedType: const FullType(String)));
+    }
+    if (object.webvtt != null) {
+      result
+        ..add('webvtt')
+        ..add(serializers.serialize(object.webvtt,
             specifiedType: const FullType(String)));
     }
     if (object.background != null) {
@@ -243,12 +255,20 @@ class _$PostListItemSerializer implements StructuredSerializer<PostListItem> {
           result.url = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
+        case 'urladaptive':
+          result.urladaptive = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
         case 'url360':
           result.url360 = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
         case 'url720':
           result.url720 = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'webvtt':
+          result.webvtt = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
         case 'background':
@@ -410,9 +430,13 @@ class _$PostListItem extends PostListItem {
   @override
   final String url;
   @override
+  final String urladaptive;
+  @override
   final String url360;
   @override
   final String url720;
+  @override
+  final String webvtt;
   @override
   final String background;
   @override
@@ -442,8 +466,10 @@ class _$PostListItem extends PostListItem {
       this.category,
       this.serverip,
       this.url,
+      this.urladaptive,
       this.url360,
       this.url720,
+      this.webvtt,
       this.background,
       this.cast,
       this.director,
@@ -498,8 +524,10 @@ class _$PostListItem extends PostListItem {
         category == other.category &&
         serverip == other.serverip &&
         url == other.url &&
+        urladaptive == other.urladaptive &&
         url360 == other.url360 &&
         url720 == other.url720 &&
+        webvtt == other.webvtt &&
         background == other.background &&
         cast == other.cast &&
         director == other.director &&
@@ -527,21 +555,21 @@ class _$PostListItem extends PostListItem {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc($jc($jc(0, id.hashCode), title.hashCode),
-                                                                                story.hashCode),
-                                                                            poster.hashCode),
-                                                                        type.hashCode),
-                                                                    year.hashCode),
-                                                                trailer.hashCode),
-                                                            views.hashCode),
-                                                        imdbrate.hashCode),
-                                                    mpr.hashCode),
-                                                seasons.hashCode),
-                                            category.hashCode),
-                                        serverip.hashCode),
-                                    url.hashCode),
-                                url360.hashCode),
-                            url720.hashCode),
+                                                                            $jc($jc($jc($jc($jc(0, id.hashCode), title.hashCode), story.hashCode), poster.hashCode),
+                                                                                type.hashCode),
+                                                                            year.hashCode),
+                                                                        trailer.hashCode),
+                                                                    views.hashCode),
+                                                                imdbrate.hashCode),
+                                                            mpr.hashCode),
+                                                        seasons.hashCode),
+                                                    category.hashCode),
+                                                serverip.hashCode),
+                                            url.hashCode),
+                                        urladaptive.hashCode),
+                                    url360.hashCode),
+                                url720.hashCode),
+                            webvtt.hashCode),
                         background.hashCode),
                     cast.hashCode),
                 director.hashCode),
@@ -566,8 +594,10 @@ class _$PostListItem extends PostListItem {
           ..add('category', category)
           ..add('serverip', serverip)
           ..add('url', url)
+          ..add('urladaptive', urladaptive)
           ..add('url360', url360)
           ..add('url720', url720)
+          ..add('webvtt', webvtt)
           ..add('background', background)
           ..add('cast', cast)
           ..add('director', director)
@@ -637,6 +667,10 @@ class PostListItemBuilder
   String get url => _$this._url;
   set url(String url) => _$this._url = url;
 
+  String _urladaptive;
+  String get urladaptive => _$this._urladaptive;
+  set urladaptive(String urladaptive) => _$this._urladaptive = urladaptive;
+
   String _url360;
   String get url360 => _$this._url360;
   set url360(String url360) => _$this._url360 = url360;
@@ -644,6 +678,10 @@ class PostListItemBuilder
   String _url720;
   String get url720 => _$this._url720;
   set url720(String url720) => _$this._url720 = url720;
+
+  String _webvtt;
+  String get webvtt => _$this._webvtt;
+  set webvtt(String webvtt) => _$this._webvtt = webvtt;
 
   String _background;
   String get background => _$this._background;
@@ -683,8 +721,10 @@ class PostListItemBuilder
       _category = _$v.category;
       _serverip = _$v.serverip;
       _url = _$v.url;
+      _urladaptive = _$v.urladaptive;
       _url360 = _$v.url360;
       _url720 = _$v.url720;
+      _webvtt = _$v.webvtt;
       _background = _$v.background;
       _cast = _$v.cast;
       _director = _$v.director;
@@ -726,8 +766,10 @@ class PostListItemBuilder
             category: category,
             serverip: serverip,
             url: url,
+            urladaptive: urladaptive,
             url360: url360,
             url720: url720,
+            webvtt: webvtt,
             background: background,
             cast: cast,
             director: director,

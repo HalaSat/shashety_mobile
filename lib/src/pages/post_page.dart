@@ -137,8 +137,7 @@ class _PostPageState extends State<PostPage> {
         ? Center(
             child: GestureDetector(
               onTap: () {
-                print(movie.url);
-                _launchMoviePlayer(movie.title, movie.url, movie.srt);
+                _launchMoviePlayer(movie);
                 // _launchUrl('https://youtu.be/${movie.trailer}');
               },
               child: Container(
@@ -331,21 +330,24 @@ class _PostPageState extends State<PostPage> {
         return ListTile(
           title: Text(episode.title),
           onTap: () {
-            final String movieUrl = episode.url.isEmpty
-                ? episode.url360.isEmpty ? episode.url720 : episode.url360
-                : episode.url;
-            _launchMoviePlayer(episode.title, movieUrl, episode.subtitle);
+            _launchMoviePlayer(episode);
           },
         );
       }).toList(),
     );
   }
 
-  void _launchMoviePlayer(String title, String movieUrl, String subtitlesUrl) {
+  void _launchMoviePlayer(dynamic movie) {
+    print(movie.urladaptive);
+    print(movie.url720);
+    print(movie.url360);
+    print(movie.srt);
     platform.invokeMethod("launchMoviePlayer", {
-      "movieUrl": movieUrl,
-      "subtitlesUrl": subtitlesUrl,
-      "title": title,
+      "urladaptive": movie.urladaptive,
+      "url360": movie.url360,
+      "url720": movie.url360,
+      "srt": movie.srt,
+      "title": movie.title,
     });
   }
 }

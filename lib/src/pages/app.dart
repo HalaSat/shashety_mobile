@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -85,6 +86,8 @@ class _BodyState extends State<Body> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
         backgroundColor: Colors.black,
         selectedItemColor: Colors.purple[400],
         currentIndex: _currentTab,

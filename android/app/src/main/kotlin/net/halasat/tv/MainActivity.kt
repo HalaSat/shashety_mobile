@@ -19,7 +19,10 @@ class MainActivity : FlutterActivity() {
             val args = call.arguments as java.util.HashMap<String, String>
             if (call.method == "launchMoviePlayer") {
                 // Get the arguments
-                val videoUrl = args["movieUrl"] as String
+                val urladaptive = args["urladaptive"] as String
+                val url360 = args["url360"] as String
+                val url720 = args["url720"] as String
+                val webvtt = args["srt"] as String
                 val title = args["title"] as String
                 val useTvPlayer = false
 
@@ -28,7 +31,10 @@ class MainActivity : FlutterActivity() {
 
                 // Bundle the video information
                 val bundle = Bundle()
-                bundle.putString("videoUrl", videoUrl)
+                bundle.putString("urladaptive", urladaptive)
+                bundle.putString("ur720", url720)
+                bundle.putString("url360", url360)
+                bundle.putString("srt", webvtt)
                 bundle.putBoolean("useTvPlayer",useTvPlayer)
                 bundle.putString("title", title)
 

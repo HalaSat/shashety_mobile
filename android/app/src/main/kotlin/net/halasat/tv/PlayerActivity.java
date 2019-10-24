@@ -21,14 +21,18 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.mediarouter.app.MediaRouteButton;
 
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ext.cast.CastPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.MergingMediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.source.SingleSampleMediaSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.text.CaptionStyleCompat;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
@@ -41,6 +45,7 @@ import com.google.android.exoplayer2.ui.SubtitleView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
 import com.google.android.gms.cast.MediaInfo;
 import com.google.android.gms.cast.MediaMetadata;
@@ -57,7 +62,10 @@ public class PlayerActivity extends AppCompatActivity {
     private SimpleExoPlayer player;
     private PlayerView simpleExoPlayerView;
     private DefaultTrackSelector trackSelector;
-    private Uri videoUri;
+    private Uri url360;
+    private Uri url720;
+    private Uri urladaptive;
+    private Uri webvtt;
     private ImageView mFullScreenIcon;
     private Toolbar mToolbar;
     private MediaRouteButton mediaRouteButton;
@@ -84,7 +92,17 @@ public class PlayerActivity extends AppCompatActivity {
         // Set title
         setMediaInfoTitle(getIntent().getStringExtra("title"));
         // Set videoUrl
-        setVideoUri(getIntent().getStringExtra("videoUrl"));
+        if (!getIntent().getBooleanExtra("useTvPlayer", false)) {
+            setUrl360(getIntent().getStringExtra("url360"));
+            setUrlAdaptive(getIntent().getStringExtra("urladaptive"));
+            final String subtitles = getIntent().getStringExtra("srt");
+            if (subtitles != null) {
+                setWebvttUrl(subtitles);
+            }
+        }
+
+
+
         text_title.setText(getIntent().getStringExtra("title"));
         // Initialize SimpleExoPlayer
         initializePlayer();
@@ -256,20 +274,43 @@ public class PlayerActivity extends AppCompatActivity {
 
 
         MediaSource videoSource;
+        MediaSource video360;
+        MergingMediaSource videosMerged;
 
+        final String url = getIntent().getStringExtra("videoUrl");
 
         if (getIntent().getBooleanExtra("useTvPlayer",false)) {
-            videoSource = new HlsMediaSource.Factory(dataSourceFactory).createMediaSource(videoUri);
+            videoSource = new HlsMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(url));
         } else {
-            videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory).
-                    createMediaSource(videoUri);
+            final MediaSource source = new ProgressiveMediaSource.Factory(dataSourceFactory).
+                    createMediaSource(urladaptive);
+            video360 = new ProgressiveMediaSource.Factory(dataSourceFactory).
+                    createMediaSource(url360);
+            videoSource =  new MergingMediaSource(source, video360);
         }
 
+        if (webvtt != null) {
+            //Add subtitles
+            SingleSampleMediaSource subtitleSource = new SingleSampleMediaSource(webvtt, dataSourceFactory,
+                    Format.createTextSampleFormat(null, MimeTypes.APPLICATION_SUBRIP, Format.NO_VALUE, "en", null),
+                    C.TIME_UNSET);
 
+            MergingMediaSource mergedSource =
+                    new MergingMediaSource(videoSource,subtitleSource);
 
-        // Prepare video with sub title
-        player.prepare(videoSource);
-        // Set the player to view
+            // Prepare video with sub title
+            player.prepare(mergedSource);
+            // Set the player to view
+
+        } else {
+            player.prepare(videoSource);
+        }
+
+//
+//        // Prepare video with sub title
+//        player.prepare(videoSource);
+//        // Set the player to view
+
         simpleExoPlayerView.setPlayer(player);
 
 
@@ -347,55 +388,6 @@ public class PlayerActivity extends AppCompatActivity {
 
     }
 
-    private void setUpCasting() {
-
-
-        CastButtonFactory.setUpMediaRouteButton(getApplicationContext(), mediaRouteButton);
-
-        castContext = CastContext.getSharedInstance(this);
-        if (castContext.getCastState() != CastState.NO_DEVICES_AVAILABLE)
-            mediaRouteButton.setVisibility(View.VISIBLE);
-
-        castContext.addCastStateListener(new CastStateListener() {
-            @Override
-            public void onCastStateChanged(int state) {
-                if (state == CastState.NO_DEVICES_AVAILABLE)
-                    mediaRouteButton.setVisibility(View.GONE);
-                else {
-                    if (mediaRouteButton.getVisibility() == View.GONE)
-                        mediaRouteButton.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-    }
-
-    private void setUpMediaInfo() {
-        MediaMetadata movieMetadata = new MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE);
-        movieMetadata.putString(MediaMetadata.KEY_TITLE, getMediaInfoTitle());
-        MediaInfo mediaInfo = new MediaInfo.Builder(videoUri + "")
-
-                .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
-                .setContentType("video/m3u8")
-                .setMetadata(movieMetadata)
-                .build();
-
-
-        final MediaQueueItem[] mediaItems = {new MediaQueueItem.Builder(mediaInfo).build()};
-
-        CastPlayer castPlayer = new CastPlayer(castContext);
-        castPlayer.setSessionAvailabilityListener(new CastPlayer.SessionAvailabilityListener() {
-            @Override
-            public void onCastSessionAvailable() {
-
-                castPlayer.loadItems(mediaItems, 0, 0, Player.REPEAT_MODE_ALL);
-            }
-
-            @Override
-            public void onCastSessionUnavailable() {
-            }
-        });
-    }
-
     private void hideSystemUI() {
         // Set the IMMERSIVE flag.
         // Set the content to appear under the system bars so that the content
@@ -444,16 +436,18 @@ public class PlayerActivity extends AppCompatActivity {
         }
     }
 
-    public String getMediaInfoTitle() {
-        return mediaInfoTitle;
-    }
-
     public void setMediaInfoTitle(String mediaInfoTitle) {
         this.mediaInfoTitle = mediaInfoTitle;
     }
 
-    public void setVideoUri(String videoUri) {
-        this.videoUri = Uri.parse(videoUri);
+    public void setUrl360(String videoUri) {
+        this.url360 = Uri.parse(videoUri);
+    }
+    public void setUrlAdaptive(String videoUri) {
+        this.urladaptive = Uri.parse(videoUri);
+    }
+    public void setWebvttUrl(String uri) {
+        this.webvtt = Uri.parse(uri);
     }
 
     private void setupActionBar() {

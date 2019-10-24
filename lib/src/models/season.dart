@@ -24,6 +24,8 @@ abstract class Episode implements Built<Episode, EpisodeBuilder> {
   String get id;
   String get subtitle;
   String get url360;
+  String get urladaptive;
+  String get webvtt;
   String get url720;
 
   Episode._();

@@ -41,9 +41,13 @@ abstract class PostListItem
   @nullable
   String get url;
   @nullable
+  String get urladaptive;
+  @nullable
   String get url360;
   @nullable
   String get url720;
+  @nullable
+  String get webvtt;
   @nullable
   String get background;
   @nullable
