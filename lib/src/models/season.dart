@@ -10,6 +10,8 @@ abstract class Season implements Built<Season, SeasonBuilder> {
   String get id;
   String get title;
   BuiltList<Episode> get episode;
+  @nullable
+  String get s3;
 
   Season._();
 
@@ -22,10 +24,11 @@ abstract class Episode implements Built<Episode, EpisodeBuilder> {
   String get title;
   String get url;
   String get id;
+  @nullable
   String get subtitle;
+  @nullable
   String get url360;
-  String get urladaptive;
-  String get webvtt;
+  @nullable
   String get url720;
 
   Episode._();

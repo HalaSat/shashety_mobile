@@ -93,11 +93,20 @@ public class PlayerActivity extends AppCompatActivity {
         setMediaInfoTitle(getIntent().getStringExtra("title"));
         // Set videoUrl
         if (!getIntent().getBooleanExtra("useTvPlayer", false)) {
-            setUrl360(getIntent().getStringExtra("url360"));
+            final String url360 = getIntent().getStringExtra("url360");
+            if (url360 != null) {
+                if (url360.length() != 0) {
+                    setUrl360(url360);
+                }
+            }
+
             setUrlAdaptive(getIntent().getStringExtra("urladaptive"));
             final String subtitles = getIntent().getStringExtra("srt");
             if (subtitles != null) {
-                setWebvttUrl(subtitles);
+                if (subtitles.length() != 0) {
+                    setWebvttUrl(subtitles);
+                }
+
             }
         }
 
@@ -284,9 +293,15 @@ public class PlayerActivity extends AppCompatActivity {
         } else {
             final MediaSource source = new ProgressiveMediaSource.Factory(dataSourceFactory).
                     createMediaSource(urladaptive);
-            video360 = new ProgressiveMediaSource.Factory(dataSourceFactory).
-                    createMediaSource(url360);
-            videoSource =  new MergingMediaSource(source, video360);
+            if (url360 != null) {
+                video360 = new ProgressiveMediaSource.Factory(dataSourceFactory).
+                        createMediaSource(url360);
+                videoSource =  new MergingMediaSource(source, video360);
+            } else {
+                videoSource = source;
+            }
+
+
         }
 
         if (webvtt != null) {

@@ -9,10 +9,10 @@ import '../models/channel.dart';
 Future<List<Channel>> getRawChannelsData(String url) async {
   List<Channel> channels;
   await http.get(url).then((res) {
-    List temp = json.decode((res.body));
+    List temp = json.decode((res.body))['channels'];
     channels = _buildChannelsList(jsonData: temp);
   }).timeout(Duration(seconds: 15));
-  return channels;
+  return channels.where((channel) => channel.enabled).toList();
 }
 
 List<Channel> _buildChannelsList({@required List jsonData}) {

@@ -21,8 +21,7 @@ class MainActivity : FlutterActivity() {
                 // Get the arguments
                 val urladaptive = args["urladaptive"] as String
                 val url360 = args["url360"] as String
-                val url720 = args["url720"] as String
-                val webvtt = args["srt"] as String
+                val webvtt = args["srt"]
                 val title = args["title"] as String
                 val useTvPlayer = false
 
@@ -32,7 +31,6 @@ class MainActivity : FlutterActivity() {
                 // Bundle the video information
                 val bundle = Bundle()
                 bundle.putString("urladaptive", urladaptive)
-                bundle.putString("ur720", url720)
                 bundle.putString("url360", url360)
                 bundle.putString("srt", webvtt)
                 bundle.putBoolean("useTvPlayer",useTvPlayer)

@@ -6,18 +6,12 @@ import '../models/channel.dart';
 class ChannelsRow extends StatefulWidget {
   ChannelsRow({
     @required this.category,
-    @required this.excerpt,
-    @required this.icon,
     @required this.channels,
     @required this.onCardPressed,
-    this.iconColor = Colors.blue,
   });
 
   final List<Channel> channels;
   final String category;
-  final IconData icon;
-  final String excerpt;
-  final Color iconColor;
   final onCardPressed;
 
   @override
@@ -47,16 +41,8 @@ class ChannelsRowState extends State<ChannelsRow> {
             margin: EdgeInsets.only(left: 15.0, bottom: 5.0),
             child: Row(
               children: [
-                Container(
-                  margin: EdgeInsets.only(right: 5.0),
-                  child: Icon(
-                    widget.icon,
-                    color: widget.iconColor,
-                    size: 18.0,
-                  ),
-                ),
                 Text(
-                  widget.excerpt,
+                  widget.category,
                   style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.w400,
@@ -93,7 +79,7 @@ class ChannelsRowState extends State<ChannelsRow> {
   filterChannels(
       String cat, List<Channel> channels, List<Channel> filteredItems) {
     List<Channel> items =
-        channels.where((Channel item) => item.cat == cat).toList();
+        channels.where((Channel item) => item.category == cat).toList();
     items = items.isNotEmpty ? items : channels;
     filteredItems.addAll(items);
   }

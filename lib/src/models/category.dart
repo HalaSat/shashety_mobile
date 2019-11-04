@@ -8,18 +8,6 @@ abstract class Category implements Built<Category, CategoryBuilder> {
 
   String get id;
   String get title;
-  @nullable
-  String get badquality;
-  @nullable
-  String get type;
-  @nullable
-  String get vorder;
-  @nullable
-  String get imdb;
-  @nullable
-  String get elcinema;
-  @nullable
-  String get parent;
 
   Category._();
 

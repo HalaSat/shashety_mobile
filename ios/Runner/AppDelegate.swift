@@ -4,6 +4,7 @@ import AVFoundation
 import AVKit
 import AVPlayerViewControllerSubtitles
 
+
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
   override func application(
@@ -12,21 +13,33 @@ import AVPlayerViewControllerSubtitles
   ) -> Bool {
     let controller = window?.rootViewController as! FlutterViewController
     let moviePlayerChannel = FlutterMethodChannel(name: "player-channel",
-                                             binaryMessenger: controller)
+                                                  binaryMessenger: controller.binaryMessenger)
     moviePlayerChannel.setMethodCallHandler ({
         (call: FlutterMethodCall, result: FlutterResult) -> Void in
         if call.method == "launchMoviePlayer" {
             // Check if arguments are provided
-            guard let args = call.arguments else {
-                return
-            }
+            guard let args = call.arguments else { return }
+            
             // Get the arguments
             if let arguments = args as? [String: Any],
-            let movieURL = arguments["movieUrl"] as? String,
-            let subtitlesURL = arguments["subtitlesUrl"]  as? String {
+            let movieURL = arguments["urladaptive"] as? String,
+            let subtitlesURL = arguments["srt"]  as? String {
                 // Launch the player with the provided urls
                 self.launchMoviePlayer(movieURLString: movieURL,
                                        subtitlesURLString: subtitlesURL)
+            }
+        } else if (call.method == "launchChannelPlayer") {
+            guard let args = call.arguments else { return }
+            
+            // Get the arguments
+            if let arguments = args as? [String: Any],
+            let channelURL = arguments["channelUrl"] as? String {
+                // Launch the player with the provided urls
+//                self.launchTVPlayer(movieURLString: channelURL,
+//                                       subtitlesURLString: srtURL)
+                
+                 
+                self.launchTVPlayer(url: channelURL)
             }
         }
     })
@@ -54,4 +67,25 @@ import AVPlayerViewControllerSubtitles
         // Play
         moviePlayer.player?.play()
     }
+    
+    private func launchTVPlayer(url: String) {
+
+        let path = url.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        guard let channelURL = URL(string: path) else {
+            print("something went wrong white converting string to url")
+            return
+        }
+        print(path)
+        
+        let tvPlayer = AVPlayerViewController()
+        tvPlayer.player = AVPlayer(url: channelURL)
+
+
+        window?.rootViewController?.present(tvPlayer, animated: true, completion: nil)
+        
+        tvPlayer.player?.play()
+        
+    }
+    
 }

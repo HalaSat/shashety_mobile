@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:screen/screen.dart';
 import 'package:shashety_mobile/src/widgets/activity_indicator.dart';
 import 'package:shashety_mobile/src/widgets/network_error.dart';
 
@@ -23,20 +22,10 @@ class _TvPageState extends State<TvPage> {
   static final playerChannel = MethodChannel('player-channel');
   bool _channelsLoaded;
   List<Channel> _channels;
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  List<String> _categories;
 
   @override
   void initState() {
-    Screen.isKeptOn.then((keptOn) {
-      if (keptOn) {
-        Screen.keepOn(false);
-      }
-    });
-
     _initChannels();
 
     super.initState();
@@ -50,50 +39,14 @@ class _TvPageState extends State<TvPage> {
   Widget _buildChannels(BuildContext context) {
     if (_channelsLoaded == true) {
       return ListView(
-        padding: EdgeInsets.only(top: 10.0),
-        children: <Widget>[
-          ChannelsRow(
-            category: 'sport',
-            excerpt: 'Sport',
-            icon: Icons.directions_run,
-            onCardPressed: _onCardPressed,
-            iconColor: Colors.green,
-            channels: _channels,
-          ),
-          ChannelsRow(
-            category: 'enter',
-            excerpt: 'Entertainment',
-            icon: Icons.featured_video,
-            onCardPressed: _onCardPressed,
-            iconColor: Colors.orange,
-            channels: _channels,
-          ),
-          ChannelsRow(
-            category: 'movies',
-            excerpt: 'Movies',
-            icon: Icons.movie,
-            onCardPressed: _onCardPressed,
-            iconColor: Colors.red,
-            channels: _channels,
-          ),
-          ChannelsRow(
-            category: 'series',
-            excerpt: 'Series',
-            icon: Icons.movie,
-            onCardPressed: _onCardPressed,
-            iconColor: Colors.purple,
-            channels: _channels,
-          ),
-          ChannelsRow(
-            category: 'kids',
-            excerpt: 'Kids',
-            icon: Icons.child_care,
-            onCardPressed: _onCardPressed,
-            iconColor: Colors.pink,
-            channels: _channels,
-          ),
-        ],
-      );
+          padding: EdgeInsets.only(top: 10.0),
+          children: _categories
+              .map((cat) => ChannelsRow(
+                    category: cat,
+                    onCardPressed: _onCardPressed,
+                    channels: _channels,
+                  ))
+              .toList());
     } else if (_channelsLoaded == false) {
       return buildNetworkError(context, _initChannels);
     } else {
@@ -102,26 +55,6 @@ class _TvPageState extends State<TvPage> {
       );
     }
   }
-
-  // Future<void> _getChannels() async {
-  //   setState(() {
-  //     _channels = null;
-  //     _channelsLoaded = null;
-  //   });
-  //   try {
-  //     final channels = await getRawChannelsData(kChannelsUrl);
-  //     setState(() {
-  //       _channels = channels;
-  //       _channelsLoaded = true;
-  //     });
-  //     PageStorage.of(context)
-  //         .writeState(context, _channels, identifier: 'channels');
-  //   } catch (error) {
-  //     setState(() {
-  //       _channelsLoaded = false;
-  //     });
-  //   }
-  // }
 
   Future<void> _initChannels() async {
     final pageStorageBucket = PageStorage.of(context);
@@ -132,12 +65,17 @@ class _TvPageState extends State<TvPage> {
       if (items == null) {
         items = await getRawChannelsData(kChannelsUrl);
       }
+      final categories = items.map<String>((channel) => channel.category);
+      final categoriesSet = Set<String>.from(categories);
+
       setState(() {
+        _categories = categoriesSet.toList();
         _channels = items;
         _channelsLoaded = true;
       });
       pageStorageBucket.writeState(context, _channels, identifier: 'channels');
     } catch (e) {
+      print(e);
       setState(() {
         _channelsLoaded = false;
       });

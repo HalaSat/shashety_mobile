@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../const.dart';
 
@@ -37,7 +36,7 @@ class ChannelCard extends StatelessWidget {
                     'assets/placeholder.png',
                   ),
                   image: NetworkImage(
-                      '$kTvBaseUrl/images/${data.cat}/${data.id}.png.jpg'),
+                      '$kTvBaseUrl:3000/uploads/images/${data.image}'),
                 ),
               ),
               Container(

@@ -31,8 +31,7 @@ class PlayerChannelCard extends StatelessWidget {
                       height: 150.0,
                       width: 220.0,
                       fit: BoxFit.cover,
-                      image:
-                          '$kTvBaseUrl/images/${data.cat}/${data.id}.png.jpg',
+                      image: '$kTvBaseUrl:3000/uploads/images/${data.image}',
                       placeholder: 'assets/placeholder.png',
                     )),
                 Container(

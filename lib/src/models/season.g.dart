@@ -29,6 +29,12 @@ class _$SeasonSerializer implements StructuredSerializer<Season> {
           specifiedType:
               const FullType(BuiltList, const [const FullType(Episode)])),
     ];
+    if (object.s3 != null) {
+      result
+        ..add('s3')
+        ..add(serializers.serialize(object.s3,
+            specifiedType: const FullType(String)));
+    }
 
     return result;
   }
@@ -57,6 +63,10 @@ class _$SeasonSerializer implements StructuredSerializer<Season> {
               specifiedType: const FullType(
                   BuiltList, const [const FullType(Episode)])) as BuiltList);
           break;
+        case 's3':
+          result.s3 = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
       }
     }
 
@@ -81,22 +91,25 @@ class _$EpisodeSerializer implements StructuredSerializer<Episode> {
       serializers.serialize(object.url, specifiedType: const FullType(String)),
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
-      'subtitle',
-      serializers.serialize(object.subtitle,
-          specifiedType: const FullType(String)),
-      'url360',
-      serializers.serialize(object.url360,
-          specifiedType: const FullType(String)),
-      'urladaptive',
-      serializers.serialize(object.urladaptive,
-          specifiedType: const FullType(String)),
-      'webvtt',
-      serializers.serialize(object.webvtt,
-          specifiedType: const FullType(String)),
-      'url720',
-      serializers.serialize(object.url720,
-          specifiedType: const FullType(String)),
     ];
+    if (object.subtitle != null) {
+      result
+        ..add('subtitle')
+        ..add(serializers.serialize(object.subtitle,
+            specifiedType: const FullType(String)));
+    }
+    if (object.url360 != null) {
+      result
+        ..add('url360')
+        ..add(serializers.serialize(object.url360,
+            specifiedType: const FullType(String)));
+    }
+    if (object.url720 != null) {
+      result
+        ..add('url720')
+        ..add(serializers.serialize(object.url720,
+            specifiedType: const FullType(String)));
+    }
 
     return result;
   }
@@ -132,14 +145,6 @@ class _$EpisodeSerializer implements StructuredSerializer<Episode> {
           result.url360 = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
-        case 'urladaptive':
-          result.urladaptive = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
-          break;
-        case 'webvtt':
-          result.webvtt = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
-          break;
         case 'url720':
           result.url720 = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
@@ -158,11 +163,13 @@ class _$Season extends Season {
   final String title;
   @override
   final BuiltList<Episode> episode;
+  @override
+  final String s3;
 
   factory _$Season([void Function(SeasonBuilder) updates]) =>
       (new SeasonBuilder()..update(updates)).build();
 
-  _$Season._({this.id, this.title, this.episode}) : super._() {
+  _$Season._({this.id, this.title, this.episode, this.s3}) : super._() {
     if (id == null) {
       throw new BuiltValueNullFieldError('Season', 'id');
     }
@@ -187,12 +194,15 @@ class _$Season extends Season {
     return other is Season &&
         id == other.id &&
         title == other.title &&
-        episode == other.episode;
+        episode == other.episode &&
+        s3 == other.s3;
   }
 
   @override
   int get hashCode {
-    return $jf($jc($jc($jc(0, id.hashCode), title.hashCode), episode.hashCode));
+    return $jf($jc(
+        $jc($jc($jc(0, id.hashCode), title.hashCode), episode.hashCode),
+        s3.hashCode));
   }
 
   @override
@@ -200,7 +210,8 @@ class _$Season extends Season {
     return (newBuiltValueToStringHelper('Season')
           ..add('id', id)
           ..add('title', title)
-          ..add('episode', episode))
+          ..add('episode', episode)
+          ..add('s3', s3))
         .toString();
   }
 }
@@ -221,6 +232,10 @@ class SeasonBuilder implements Builder<Season, SeasonBuilder> {
       _$this._episode ??= new ListBuilder<Episode>();
   set episode(ListBuilder<Episode> episode) => _$this._episode = episode;
 
+  String _s3;
+  String get s3 => _$this._s3;
+  set s3(String s3) => _$this._s3 = s3;
+
   SeasonBuilder();
 
   SeasonBuilder get _$this {
@@ -228,6 +243,7 @@ class SeasonBuilder implements Builder<Season, SeasonBuilder> {
       _id = _$v.id;
       _title = _$v.title;
       _episode = _$v.episode?.toBuilder();
+      _s3 = _$v.s3;
       _$v = null;
     }
     return this;
@@ -250,8 +266,9 @@ class SeasonBuilder implements Builder<Season, SeasonBuilder> {
   _$Season build() {
     _$Season _$result;
     try {
-      _$result =
-          _$v ?? new _$Season._(id: id, title: title, episode: episode.build());
+      _$result = _$v ??
+          new _$Season._(
+              id: id, title: title, episode: episode.build(), s3: s3);
     } catch (_) {
       String _$failedField;
       try {
@@ -280,24 +297,13 @@ class _$Episode extends Episode {
   @override
   final String url360;
   @override
-  final String urladaptive;
-  @override
-  final String webvtt;
-  @override
   final String url720;
 
   factory _$Episode([void Function(EpisodeBuilder) updates]) =>
       (new EpisodeBuilder()..update(updates)).build();
 
   _$Episode._(
-      {this.title,
-      this.url,
-      this.id,
-      this.subtitle,
-      this.url360,
-      this.urladaptive,
-      this.webvtt,
-      this.url720})
+      {this.title, this.url, this.id, this.subtitle, this.url360, this.url720})
       : super._() {
     if (title == null) {
       throw new BuiltValueNullFieldError('Episode', 'title');
@@ -307,21 +313,6 @@ class _$Episode extends Episode {
     }
     if (id == null) {
       throw new BuiltValueNullFieldError('Episode', 'id');
-    }
-    if (subtitle == null) {
-      throw new BuiltValueNullFieldError('Episode', 'subtitle');
-    }
-    if (url360 == null) {
-      throw new BuiltValueNullFieldError('Episode', 'url360');
-    }
-    if (urladaptive == null) {
-      throw new BuiltValueNullFieldError('Episode', 'urladaptive');
-    }
-    if (webvtt == null) {
-      throw new BuiltValueNullFieldError('Episode', 'webvtt');
-    }
-    if (url720 == null) {
-      throw new BuiltValueNullFieldError('Episode', 'url720');
     }
   }
 
@@ -341,8 +332,6 @@ class _$Episode extends Episode {
         id == other.id &&
         subtitle == other.subtitle &&
         url360 == other.url360 &&
-        urladaptive == other.urladaptive &&
-        webvtt == other.webvtt &&
         url720 == other.url720;
   }
 
@@ -350,15 +339,9 @@ class _$Episode extends Episode {
   int get hashCode {
     return $jf($jc(
         $jc(
-            $jc(
-                $jc(
-                    $jc(
-                        $jc($jc($jc(0, title.hashCode), url.hashCode),
-                            id.hashCode),
-                        subtitle.hashCode),
-                    url360.hashCode),
-                urladaptive.hashCode),
-            webvtt.hashCode),
+            $jc($jc($jc($jc(0, title.hashCode), url.hashCode), id.hashCode),
+                subtitle.hashCode),
+            url360.hashCode),
         url720.hashCode));
   }
 
@@ -370,8 +353,6 @@ class _$Episode extends Episode {
           ..add('id', id)
           ..add('subtitle', subtitle)
           ..add('url360', url360)
-          ..add('urladaptive', urladaptive)
-          ..add('webvtt', webvtt)
           ..add('url720', url720))
         .toString();
   }
@@ -400,14 +381,6 @@ class EpisodeBuilder implements Builder<Episode, EpisodeBuilder> {
   String get url360 => _$this._url360;
   set url360(String url360) => _$this._url360 = url360;
 
-  String _urladaptive;
-  String get urladaptive => _$this._urladaptive;
-  set urladaptive(String urladaptive) => _$this._urladaptive = urladaptive;
-
-  String _webvtt;
-  String get webvtt => _$this._webvtt;
-  set webvtt(String webvtt) => _$this._webvtt = webvtt;
-
   String _url720;
   String get url720 => _$this._url720;
   set url720(String url720) => _$this._url720 = url720;
@@ -421,8 +394,6 @@ class EpisodeBuilder implements Builder<Episode, EpisodeBuilder> {
       _id = _$v.id;
       _subtitle = _$v.subtitle;
       _url360 = _$v.url360;
-      _urladaptive = _$v.urladaptive;
-      _webvtt = _$v.webvtt;
       _url720 = _$v.url720;
       _$v = null;
     }
@@ -451,8 +422,6 @@ class EpisodeBuilder implements Builder<Episode, EpisodeBuilder> {
             id: id,
             subtitle: subtitle,
             url360: url360,
-            urladaptive: urladaptive,
-            webvtt: webvtt,
             url720: url720);
     replace(_$result);
     return _$result;

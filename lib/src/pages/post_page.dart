@@ -38,10 +38,11 @@ class _PostPageState extends State<PostPage> {
 
     post = fetchPost(id);
 
-    if (item.type == '1') {
+    if (item.type == 'series' || item.type == "1") {
       int id = int.parse(item.id);
       fetchSeries(id).then(
         (data) => setState(() {
+          print(data.length);
           seasons = data;
         }),
       );
@@ -57,10 +58,6 @@ class _PostPageState extends State<PostPage> {
 
   @override
   Widget build(BuildContext context) {
-    // if (Theme.of(context).platform == TargetPlatform.android) {
-    //   _checkMoviePlayerIsAvailable(context);
-    // }
-
     return Scaffold(
       body: FutureBuilder(
         future: post,
@@ -133,11 +130,11 @@ class _PostPageState extends State<PostPage> {
 
   SingleChildRenderObjectWidget _buildPlayButtonAppBar(
       PostListItem movie, BuildContext context) {
-    return !(movie.type == '1')
+    return movie.type == 'movie'
         ? Center(
             child: GestureDetector(
               onTap: () {
-                _launchMoviePlayer(movie);
+                _playMovie(movie);
                 // _launchUrl('https://youtu.be/${movie.trailer}');
               },
               child: Container(
@@ -263,8 +260,8 @@ class _PostPageState extends State<PostPage> {
             data: movie.year,
           ),
           InfoRow(
-            title: 'Category',
-            data: movie.category,
+            title: 'Type',
+            data: movie.type,
           ),
           InfoRow(
             title: 'Genre',
@@ -330,24 +327,28 @@ class _PostPageState extends State<PostPage> {
         return ListTile(
           title: Text(episode.title),
           onTap: () {
-            _launchMoviePlayer(episode);
+            _playEpisode(episode);
           },
         );
       }).toList(),
     );
   }
 
-  void _launchMoviePlayer(dynamic movie) {
-    print(movie.urladaptive);
-    print(movie.url720);
-    print(movie.url360);
-    print(movie.srt);
+  void _playEpisode(Episode title) {
     platform.invokeMethod("launchMoviePlayer", {
-      "urladaptive": movie.urladaptive,
-      "url360": movie.url360,
-      "url720": movie.url360,
-      "srt": movie.srt,
-      "title": movie.title,
+      "urladaptive": title.url,
+      "url360": title.url360 ?? '',
+      "srt": title.subtitle ?? '',
+      "title": title.title,
+    });
+  }
+
+  void _playMovie(PostListItem title) {
+    platform.invokeMethod("launchMoviePlayer", {
+      "urladaptive": title.url,
+      "url360": title.url360 ?? '',
+      "srt": title.srt ?? '',
+      "title": title.title,
     });
   }
 }
